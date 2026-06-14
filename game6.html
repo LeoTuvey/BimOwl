@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Lesson 6</title>
+</head>
+<body>
+
+<script>
+
+let course = localStorage.getItem("course") || "en-ku";
+
+function speak(text){
+let msg=new SpeechSynthesisUtterance(text);
+msg.lang="en-US";
+speechSynthesis.speak(msg);
+}
+
+let questions=[
+{
+text:"cat",
+options:["Cat","Dog","Bird"],
+answer:0
+}
+];
+
+let current=0;
+
+function load(){
+let q=questions[current];
+speak(q.text);
+
+document.body.innerHTML=
+"<h2>Listen and choose</h2>"+q.options.map((o,i)=>
+`<button onclick='check(${i})'>${o}</button>`).join("");
+}
+
+function check(i){
+if(i===questions[current].answer){
+finish();
+}
+}
+
+function finish(){
+let xpKey=course+"_xp";
+let unlockKey=course+"_unlocked";
+
+let xp=parseInt(localStorage.getItem(xpKey)||"0");
+localStorage.setItem(xpKey,xp+10);
+
+let unlocked=JSON.parse(localStorage.getItem(unlockKey)||"[true,false,false,false,false,false,false]");
+unlocked[6]=true;
+localStorage.setItem(unlockKey,JSON.stringify(unlocked));
+
+window.location.href="engine.html";
+}
+
+load();
+
+</script>
+
+</body>
+</html>
