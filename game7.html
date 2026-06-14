@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Final Test</title>
+</head>
+<body>
+
+<script>
+
+let course=localStorage.getItem("course")||"en-ku";
+
+let q=[
+{
+q:"Cat",
+options:["Cat","Dog","Bird"],
+answer:0
+}
+];
+
+function load(){
+let x=q[0];
+document.body.innerHTML="<h2>Final Test</h2>"+
+x.options.map((o,i)=>`<button onclick='check(${i})'>${o}</button>`).join("");
+}
+
+function check(i){
+if(i===q[0].answer){
+finish();
+}
+}
+
+function finish(){
+let xpKey=course+"_xp";
+let unlockKey=course+"_unlocked";
+
+let xp=parseInt(localStorage.getItem(xpKey)||"0");
+localStorage.setItem(xpKey,xp+20);
+
+window.location.href="engine.html";
+}
+
+load();
+
+</script>
+
+</body>
+</html>
