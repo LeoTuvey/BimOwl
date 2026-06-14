@@ -22,6 +22,10 @@ button{
   border-radius: 10px;
   cursor: pointer;
 }
+
+button:hover{
+  opacity: 0.9;
+}
 </style>
 </head>
 
@@ -46,58 +50,63 @@ console.log("🧪 Lesson loaded");
 // =========================
 if (!window.Engine) {
   console.error("❌ Engine not loaded");
-  alert("Engine failed to load. Check engine-core.js path");
 }
 
 // =========================
 // MAIN FUNCTION
 // =========================
-window.runFinishLogic = function () {
+function runFinishLogic() {
 
   console.log("🔥 runFinishLogic triggered");
 
   const engine = window.Engine;
 
-  if (!engine) {
-    alert("Engine missing");
-    return;
-  }
+  // If Engine exists, award XP
+  if (engine) {
 
-  const oldLevel = engine.getLevel();
-  const xpReward = 10;
+    const oldLevel = typeof engine.getLevel === "function"
+      ? engine.getLevel()
+      : 1;
 
-  engine.addXP(xpReward);
-  engine.updateStreak();
-  engine.resetHearts();
+    const xpReward = 10;
 
-  const newLevel = engine.getLevel();
+    if (typeof engine.addXP === "function") {
+      engine.addXP(xpReward);
+    }
 
-  console.log("XP:", engine.getXP());
-  console.log("Old Level:", oldLevel);
-  console.log("New Level:", newLevel);
+    if (typeof engine.updateStreak === "function") {
+      engine.updateStreak();
+    }
 
-  if (newLevel > oldLevel) {
-    alert("🏆 LEVEL UP!");
+    if (typeof engine.resetHearts === "function") {
+      engine.resetHearts();
+    }
+
+    const newLevel = typeof engine.getLevel === "function"
+      ? engine.getLevel()
+      : oldLevel;
+
+    if (newLevel > oldLevel) {
+      alert("🏆 LEVEL UP!");
+    } else {
+      alert("+10 XP!");
+    }
+
   } else {
-    alert("+10 XP!");
+    // Fallback if engine is missing
+    alert("Lesson Complete!");
   }
-};
+
+  // =========================
+  // OPEN NEXT PAGE
+  // =========================
+  window.location.href = "game1.html";
+}
 
 // =========================
 // BUTTON CLICK
 // =========================
-document.getElementById("finishBtn").addEventListener("click", function () {
-  console.log("button clicked");
-  window.runFinishLogic();
-});
-
-// =========================
-// AUTO TEST (IMPORTANT)
-// =========================
-setTimeout(() => {
-  console.log("⏱ AUTO RUN TEST");
-  window.runFinishLogic();
-}, 1200);
+document.getElementById("finishBtn").addEventListener("click", runFinishLogic);
 
 </script>
 
