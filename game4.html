@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Game 4</title></head>
+<body>
+
+<h2 id="q"></h2>
+<div id="opt"></div>
+
+<script>
+
+let course=localStorage.getItem("course")||"en-ku";
+
+function t(e,k,s){
+if(course==="en-ku") return k;
+if(course==="en-sv") return s;
+return e;
+}
+
+function playSound(type){
+new Audio(type==="correct"
+?"https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"
+:"https://actions.google.com/sounds/v1/cartoon/boing.ogg").play();
+}
+
+let q=[{
+q:t("Choose article","Hilbijêre","Välj artikel"),
+opt:["a","an","the"],
+a:1
+}];
+
+function load(){
+let x=q[0];
+document.getElementById("q").innerText=x.q;
+document.getElementById("opt").innerHTML=
+x.opt.map((o,i)=>`<button onclick="check(${i})">${o}</button>`).join("");
+}
+
+function check(i){
+if(i===q[0].a){
+playSound("correct");
+finish();
+}else playSound("wrong");
+}
+
+function finish(){
+let c=localStorage.getItem("course")||"en-ku";
+
+let xp=parseInt(localStorage.getItem(c+"_xp")||"0");
+localStorage.setItem(c+"_xp",xp+10);
+
+let u=JSON.parse(localStorage.getItem(c+"_unlocked")||"[true,false,false,false,false,false,false]");
+u[4]=true;
+localStorage.setItem(c+"_unlocked",JSON.stringify(u));
+
+window.location.href="engine.html";
+}
+
+load();
+
+</script>
+
+</body>
+</html>
